@@ -26,28 +26,33 @@ function dateToString(date) {
 
 check.addEventListener("click", () => {
   birthDate = inputBirthDate.value;
-  const [yyyy, mm, dd] = birthDate.split("-");
-  const date = {
-    day: Number(dd),
-    month: Number(mm),
-    year: Number(yyyy),
-  };
-  var flag = false;
-  var strDate = dateToString(date);
-  var list = checkFormatsArePalindromes(strDate);
-  flagIsPalindrome = false;
-  for (var i = 0; i < list.length; i++) {
-    if (list[i]) {
-      flagIsPalindrome = true;
-      output.innerText = "Your birthday is a palindrome";
-      break;
-    } else {
-      var [numOfNextDays, nextPalindromeDate] = getNextPalindrome(date);
-      var [numOfPrevDays, previousPalindromeDate] = getPreviousPalindrome(date);
-      if (numOfNextDays > numOfPrevDays) {
-        printMessage(numOfPrevDays, previousPalindromeDate);
+  if (inputBirthDate.value == "") {
+    output.innerText = "Please enter your date of birth";
+  } else {
+    const [yyyy, mm, dd] = birthDate.split("-");
+    const date = {
+      day: Number(dd),
+      month: Number(mm),
+      year: Number(yyyy),
+    };
+    var flag = false;
+    var strDate = dateToString(date);
+    var list = checkFormatsArePalindromes(strDate);
+    flagIsPalindrome = false;
+    for (var i = 0; i < list.length; i++) {
+      if (list[i]) {
+        flagIsPalindrome = true;
+        output.innerText = "Your birthday is a palindrome";
+        break;
       } else {
-        printMessage(numOfNextDays, nextPalindromeDate);
+        var [numOfNextDays, nextPalindromeDate] = getNextPalindrome(date);
+        var [numOfPrevDays, previousPalindromeDate] =
+          getPreviousPalindrome(date);
+        if (numOfNextDays > numOfPrevDays) {
+          printMessage(numOfPrevDays, previousPalindromeDate);
+        } else {
+          printMessage(numOfNextDays, nextPalindromeDate);
+        }
       }
     }
   }
