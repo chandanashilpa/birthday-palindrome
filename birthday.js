@@ -25,7 +25,16 @@ function dateToString(date) {
 }
 
 check.addEventListener("click", () => {
+  const formatsStr = [
+    "ddmmyyyy",
+    "mmddyyyy",
+    "yyyymmdd",
+    "ddmmyy",
+    "mmddyy",
+    "yymmdd",
+  ];
   birthDate = inputBirthDate.value;
+  format = "";
   if (inputBirthDate.value == "") {
     output.innerText = "Please enter your date of birth";
   } else {
@@ -42,16 +51,27 @@ check.addEventListener("click", () => {
     for (var i = 0; i < list.length; i++) {
       if (list[i]) {
         flagIsPalindrome = true;
-        output.innerText = "Your birthday is a palindrome";
+        output.innerText = `Your birthday is a palindrome in the format ${formatsStr[i]}`;
         break;
       } else {
-        var [numOfNextDays, nextPalindromeDate] = getNextPalindrome(date);
-        var [numOfPrevDays, previousPalindromeDate] =
+        var [numOfNextDays, nextPalindromeDate, formatOfNextDate] =
+          getNextPalindrome(date);
+        var [numOfPrevDays, previousPalindromeDate, formatOfPrevDate] =
           getPreviousPalindrome(date);
         if (numOfNextDays > numOfPrevDays) {
-          printMessage(numOfPrevDays, previousPalindromeDate);
+          printMessage(
+            numOfPrevDays,
+            previousPalindromeDate,
+            formatOfPrevDate,
+            formatsStr
+          );
         } else {
-          printMessage(numOfNextDays, nextPalindromeDate);
+          printMessage(
+            numOfNextDays,
+            nextPalindromeDate,
+            formatOfNextDate,
+            formatsStr
+          );
         }
       }
     }
@@ -89,7 +109,7 @@ function getNextPalindrome(date) {
     var results = checkFormatsArePalindromes(strNextDate);
     for (var i = 0; i < results.length; i++) {
       if (results[i]) {
-        return [counter, strNextDate];
+        return [counter, strNextDate, i];
       }
     }
     nextDate = getNextDate(nextDate);
@@ -148,7 +168,7 @@ function getPreviousPalindrome(date) {
     var results = checkFormatsArePalindromes(strPreviousDate);
     for (var i = 0; i < results.length; i++) {
       if (results[i]) {
-        return [counter, strPreviousDate];
+        return [counter, strPreviousDate, i];
       }
     }
     previousDate = getPreviousDate(previousDate);
@@ -182,7 +202,7 @@ function getPreviousDate(date) {
   return previousDate;
 }
 
-function printMessage(days, date) {
+function printMessage(days, date, format, formats) {
   output.innerText =
     "Nearest palindrome date is " +
     date.day +
@@ -190,6 +210,7 @@ function printMessage(days, date) {
     date.month +
     "-" +
     date.year +
+    ` in the format ${formats[format]}` +
     " and you missed by " +
     days +
     " days";
